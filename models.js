@@ -6,7 +6,8 @@ const blogSchema = mongoose.Schema({
   author: {
     firstName: String,
     lastName: String
-  }
+  },
+  created: {type: Date, default: Date.now}
 });
 
 
@@ -21,7 +22,8 @@ blogSchema.methods.apiRepr = function () {
     id: this._id,
     title: this.title,
     content: this.content,
-    author: this.authorName
+    author: this.authorName,
+    created: this.created
   };
 }
 
