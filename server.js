@@ -27,3 +27,15 @@ app.get('/blogs', (req, res) => {
         res.status(500).json({message: 'Internal server error'});
       });
 });
+
+// request by ID
+app.get('/blogs/:id', (req, res) => {
+  Blog
+    .findById(req.params.id)
+    .exec()
+    .then(blog => res.json(blog.apiRepr()))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({message: 'Internal server error'})
+    });
+});
