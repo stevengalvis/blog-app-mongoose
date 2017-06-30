@@ -65,7 +65,7 @@ app.post('/posts', (req, res) => {
         });
 });
 
-app.put('posts/:id', (req, res) => {
+app.put('/posts/:id', (req, res) => {
   // check if id in the request path
   // and the one in request body match
   if(!(req.params.id && req.body.id && req.params.id === req.body.id)) {
@@ -94,7 +94,7 @@ app.put('posts/:id', (req, res) => {
 
 });
 
-app.delete('posts/:id', (req, res) => {
+app.delete('/posts/:id', (req, res) => {
   Blog
     .findByIdAndRemove(req.params.id)
     .exec()

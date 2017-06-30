@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const blogSchema = mongoose.Schema({
-  titile: {type: String, required: true},
+  title: {type: String, required: true},
   content: {type: String, required: true},
   author: {
     firstName: String,
@@ -18,6 +18,7 @@ blogSchema.virtual('authorName').get(function() {
 
 blogSchema.methods.apiRepr = function () {
   return {
+    id: this._id,
     title: this.title,
     content: this.content,
     author: this.authorName
