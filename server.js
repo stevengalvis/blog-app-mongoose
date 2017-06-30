@@ -102,3 +102,50 @@ app.delete('posts/:id', (req, res) => {
     .catch(err => res.staus(500).json({message: 'Internal server error'}));
 
 });
+
+
+// catch all endpoints if client makes request to non-existent endpoint
+app.use('*', function(req, res) {
+  res.status(404).json({message: 'Not found'});
+});
+
+let server;
+
+function runServer(databaseUrl = DATABASE_URL, port = PORT) {
+
+  return new Promise((resolve, reject) => {
+    mongoose.connect(databaseUrl, err => {
+      if(err) {
+        return reject(err);
+      }
+      server = app.listen(port, () => {
+        console.log(`Your app is listening on port ${port}`);
+        resolve();
+      })
+      .on('error', err => {
+        mongoose.disconnect();
+        reject(err);
+      });
+    });
+  });
+}
+
+function closeServer() {
+  return mongoose.disconnect().then(() => {
+    return new Promise((resolve, reject) => {
+      console.log('Closing server');
+      server.close(err => {
+        if(err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  });
+}
+
+if(require.main === module) {
+  runServer().catch(err => console.error(err));
+};
+
+module.exports = {app, runServer, closeServer};
