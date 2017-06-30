@@ -1,0 +1,14 @@
+{
+  "name": "blog-app-mongoose-challenge",
+  "version": "1.0.0",
+  "description": "Thinkful Blog App with Mongoose",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}
