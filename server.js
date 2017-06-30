@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // send back all post from DATABASE_URL
-app.get('/blogs', (req, res) => {
+app.get('/posts', (req, res) => {
   Blog
     .find()
     .exec()
@@ -29,7 +29,7 @@ app.get('/blogs', (req, res) => {
 });
 
 // request by ID
-app.get('/blogs/:id', (req, res) => {
+app.get('/posts/:id', (req, res) => {
   Blog
     .findById(req.params.id)
     .exec()
@@ -40,7 +40,7 @@ app.get('/blogs/:id', (req, res) => {
     });
 });
 
-app.post('/blogs', (req, res) => {
+app.post('/posts', (req, res) => {
 
   const requiredFields = ['title', 'content', 'author'];
   for(let i=0; i<requiredFields.length; i++) {
@@ -63,4 +63,33 @@ app.post('/blogs', (req, res) => {
           console.error(err);
           res.status(500).json({message: 'Internal server error'});
         });
+});
+
+app.put('posts/:id', (req, res) => {
+  // check if id in the request path
+  // and the one in request body match
+  if(!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+    const message = (`Request path id (${req.params.id}) and request body` +
+    `(${req.body.id}) must match`);
+    console.error(message);
+    res.status(400).json({message: message});
+  }
+
+  const toUpdate = {};
+  const updatableFields = ['title', 'content', 'author'];
+
+  updatableFields.forEach(field => {
+    if (field in req.body) {
+      toUpdate[field] = req.body[field];
+    }
+  });
+
+  Blog
+    .findByIdAndUpdate(req.params.id,
+    {$set: toUpdate})
+    .exec()
+    .then(
+      blog => res.status(200).json(blog.apiRepr()))
+      .catch(err => res.status(500).json({message: 'Internal server error'}));
+
 });
